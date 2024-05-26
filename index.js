@@ -1,0 +1,34 @@
+// Importar depencias
+import express from "express";
+import cors from "cors";
+import connection from "./database/connection.js";
+import config from "./config.js";
+import userRouter from "./routes/userRoutes.js";
+
+// crear servidor y asignar puerto
+const app = express();
+const port = config.PORT;
+
+// aplicar middlewares
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+// Conexión a DB
+connection();
+
+// Rutas
+
+app.use('/api/user', userRouter);
+
+app.get('/', (req, res) => {
+    return res.status(200).send({
+        status:'Success',
+        message: 'Api Rest Pelu Canina'
+    });
+});
+
+// Iniciar servidor
+app.listen(port, () => {
+    console.log(`Server running at port ${port}`);
+});
