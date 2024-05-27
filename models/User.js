@@ -28,7 +28,7 @@ const userSchema = Schema({
     },
     phone: {
         type: String,
-        default: 'Sin numero telefonico indicado'
+        default: 'Sin numero indicado'
     },
     role: {
         type: String,
