@@ -53,7 +53,7 @@ const register = (req, res) => {
             <br />
             <h2>Presiona sobre el siguiente enlace para validar tu cuenta de usuario en Peluqueria canina Snoopy!</h2>
             <br />
-            <a href="http://127.0.0.1:3000/api/user/validateUserRegister/${token}">http://127.0.0.1:3000/api/user/validateUserRegister/${token}</a>`
+            <a href="https://api-pelu-canina-snoopy.onrender.com/api/user/validateUserRegister/${token}">http://127.0.0.1:3000/api/user/validateUserRegister/${token}</a>`
 
             const options = {
                 to: bodyData.email,
@@ -77,6 +77,11 @@ const register = (req, res) => {
                     });
                 });
         } catch (error) {
+
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar encriptar la contraseña'
+            });
             
         }
         

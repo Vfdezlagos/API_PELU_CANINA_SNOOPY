@@ -22,6 +22,14 @@ const userSchema = Schema({
         type: String,
         required: true
     },
+    address: {
+        type: String,
+        default: 'Sin dirección indicada'
+    },
+    phone: {
+        type: String,
+        default: 'Sin numero telefonico indicado'
+    },
     role: {
         type: String,
         default: 'role-user'
