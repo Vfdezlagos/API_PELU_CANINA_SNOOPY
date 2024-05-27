@@ -48,12 +48,31 @@ const register = (req, res) => {
             const token = jwt.createRegisterToken(createdUser);
 
             // preparar mail
-            const html = `<h1>Validación de registro de usuario</h1>
-            <br />
-            <br />
-            <h2>Presiona sobre el siguiente enlace para validar tu cuenta de usuario en Peluqueria canina Snoopy!</h2>
-            <br />
-            <a href="https://api-pelu-canina-snoopy.onrender.com/api/user/validateUserRegister/${token}">Validar registro aquí</a>`
+            const html = `<head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+        </head>
+        <body>
+            <div class="container my-5">
+                <div class="p-5 text-center bg-body-tertiary rounded-3">
+                  <img src="./public/images/logo final 1920x1920.webp" alt="logo peluqueria canina snoopy" width="20%">
+                  <h1 class="text-body-emphasis">Validación de Registro</h1>
+                  <p class="col-lg-8 mx-auto fs-5 text-muted">
+                    Bienvenido a Peluqueria canina Snoopy, presione sobre el siguiente enlace para completar su registro.
+                  </p>
+                  <div class="d-inline-flex gap-2 mb-5">
+                    <button class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button">
+                        <a class="mx-3" style="text-decoration: none; color: white;" href="https://api-pelu-canina-snoopy.onrender.com/api/user/validateUserRegister/${token}">Validar registro aquí</a>
+                        <svg width="26px" height="26px" stroke-width="2.4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#00eeff"><path d="M7 12.5L10 15.5L17 8.5" stroke="#00eeff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#00eeff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+        
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" type="text/javascript"></script>
+        </body>`
 
             const options = {
                 to: bodyData.email,
