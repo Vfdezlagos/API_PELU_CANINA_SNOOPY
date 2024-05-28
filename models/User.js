@@ -28,7 +28,7 @@ const userSchema = Schema({
     },
     phone: {
         type: Number,
-        default: NaN
+        default: null
     },
     role: {
         type: String,
