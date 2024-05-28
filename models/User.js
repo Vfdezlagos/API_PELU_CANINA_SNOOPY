@@ -27,8 +27,8 @@ const userSchema = Schema({
         default: 'Sin dirección indicada'
     },
     phone: {
-        type: String,
-        default: 'Sin numero indicado'
+        type: Number,
+        default: NaN
     },
     role: {
         type: String,

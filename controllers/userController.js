@@ -41,43 +41,33 @@ const register = (req, res) => {
             // crear usuario para guardar en db
             const createdUser = {...bodyData};
             createdUser.password = encriptedPassword;
-
-            console.log(createdUser);
         
             // crear token con los datos del body
             const token = jwt.createRegisterToken(createdUser);
 
             // preparar mail
-            const html = `<head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Document</title>
-            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-        </head>
-        <body>
-            <div class="container my-5">
-                <div class="p-5 text-center bg-body-tertiary rounded-3">
-                  <img src="./public/images/logo final 1920x1920.webp" alt="logo peluqueria canina snoopy" width="20%">
-                  <h1 class="text-body-emphasis">Validación de Registro</h1>
-                  <p class="col-lg-8 mx-auto fs-5 text-muted">
-                    Bienvenido a Peluqueria canina Snoopy, presione sobre el siguiente enlace para completar su registro.
-                  </p>
-                  <div class="d-inline-flex gap-2 mb-5">
-                    <button class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button">
-                        <a class="mx-3" style="text-decoration: none; color: white;" href="https://api-pelu-canina-snoopy.onrender.com/api/user/validateUserRegister/${token}">Validar registro aquí</a>
-                        <svg width="26px" height="26px" stroke-width="2.4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#00eeff"><path d="M7 12.5L10 15.5L17 8.5" stroke="#00eeff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#00eeff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-        
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" type="text/javascript"></script>
-        </body>`
+            const html = `<div style="display: block; margin: 0 auto; width: 100%; min-height: 600px; background-color: #ccc;">
+            <img style="display: block; width: 10em; margin: 0 auto; padding-top: 50px;" src="cid:logo_pelu_canina" alt="logo peluquería canina snoopy">
+            <h1 style="text-align: center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 2em; ">Validación de registro de usuario</h1>
+            <br />
+            <br />
+            <h2 style="text-align: center; padding-left: 20px; padding-right: 20px; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.3em; ">Presiona sobre el siguiente enlace para validar tu cuenta de usuario en Peluqueria canina Snoopy!</h2>
+            <br />
+            <div style="text-align: center;">
+                <a href="https://api-pelu-canina-snoopy.onrender.com/api/user/validateUserRegister/${token}"><button style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: 1em; background-color: rgb(0, 183, 255); width: 250px; height: 50px; line-height: 40px; border: 2px solid rgb(0, 183, 255); border-radius: 40px; color: white; margin-bottom: 1.5em;">Completar mi registro <svg width="25px" height="25px" stroke-width="2.4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#ffffff"><path d="M7 12.5L10 15.5L17 8.5" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button></a>
+            </div>
+            <p style="text-align: center; padding-bottom: 40px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">El enlace estará disponible durante 2 horas. Luego tendrás que volver a registrarte.</p>
+        </div>`
 
             const options = {
                 to: bodyData.email,
                 subject: 'Validación de Registro de usuario',
-                html
+                html,
+                attachments: [{
+                    filename: 'logo_480x480.png',
+                    path: 'public/images/logo_480x480.png',
+                    cid: 'logo_pelu_canina'
+                }]
             }
 
             // enviar mail
