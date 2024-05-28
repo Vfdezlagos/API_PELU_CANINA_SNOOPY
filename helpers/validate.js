@@ -86,14 +86,20 @@ const validate = {
 
     Dog: (dog) => {
         // validar que llega name (nombre del perro) es lo unico required
-        if(!dog.name) {
-            console.log('Debe ingresar al menos el campo name');
+        if(!dog.name || !dog.gender) {
+            console.log('Debe ingresar al menos los campos name y gender');
             return false
         }
 
         // Validar que name no sea vacio
         if(validator.isEmpty(dog.name)) {
             console.log('Debe indicar el nombre del perro');
+            return false
+        }
+
+        // Validar que gender no sea vacio
+        if(validator.isEmpty(dog.gender)) {
+            console.log('Debe indicar el género del perro');
             return false
         }
 

@@ -14,6 +14,10 @@ const dogSchema = Schema({
         type: String,
         default: null
     },
+    gender: {
+        type: String,
+        required: true
+    },
     weight: {
         type: Number,
         default: null
