@@ -98,7 +98,7 @@ const validate = {
         }
 
         // validar raza
-        if(dog.race && !validator.isAlpha(dog.race)) {
+        if(dog.race) {
             console.log('El campo raza solo acepta letras a-z A-Z');
             return false
         }
