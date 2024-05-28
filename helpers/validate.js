@@ -97,11 +97,6 @@ const validate = {
             return false
         }
 
-        // validar raza
-        if(dog.race) {
-            console.log('El campo raza solo acepta letras a-z A-Z');
-            return false
-        }
 
         // validar peso
         if(dog.weight && !validator.isNumeric(dog.weight)) {
