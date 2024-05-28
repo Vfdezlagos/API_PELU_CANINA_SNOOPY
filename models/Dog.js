@@ -1,0 +1,39 @@
+import { Schema, model } from "mongoose";
+import paginate from "mongoose-paginate-v2";
+
+const dogSchema = Schema({
+    user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    race: {
+        type: String,
+        default: null
+    },
+    weight: {
+        type: Number,
+        default: null
+    },
+    age: {
+        type: Number,
+        default: null
+    },
+    image: {
+        type: String,
+        default: 'default_dog.png'
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+dogSchema.plugin(paginate);
+
+const dogModel = model('Dog', dogSchema, 'dogs');
+
+export default dogModel;

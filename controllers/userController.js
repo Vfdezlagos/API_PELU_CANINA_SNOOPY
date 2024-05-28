@@ -185,14 +185,16 @@ const login = (req, res) => {
             // crear objeto user para guardar en el token
             const identifiedUser = user.toObject();
 
+            
+            // crear token con el usuario encontrado
+            const token = jwt.createToken(identifiedUser);
+
             // eliminar la info que no queremos guardar en el token
             delete identifiedUser.password;
             delete identifiedUser.__v;
             delete identifiedUser._id;
             delete identifiedUser.created_at;
 
-            // crear token con el usuario encontrado
-            const token = jwt.createToken(identifiedUser);
 
             // devolver respuesta
             return res.status(200).send({

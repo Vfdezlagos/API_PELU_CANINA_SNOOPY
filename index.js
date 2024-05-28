@@ -3,7 +3,8 @@ import express from "express";
 import cors from "cors";
 import connection from "./database/connection.js";
 import config from "./config.js";
-import userRouter from "./routes/userRoutes.js";
+import userRouter from "./routes/userRouter.js";
+import dogRouter from "./routes/dogRouter.js";
 
 // crear servidor y asignar puerto
 const app = express();
@@ -21,6 +22,7 @@ connection();
 // Rutas
 
 app.use('/api/user', userRouter);
+app.use('/api/dog', dogRouter);
 
 app.get('/', (req, res) => {
     return res.status(200).send({
