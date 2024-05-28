@@ -35,7 +35,7 @@ const register = (req, res) => {
             const dog = {user: userId, ...bodyData};
 
             // hacer un create
-            dogModel.create(dog).exec()
+            dogModel.create(dog)
                 .then(createdDog => {
                     if(!createdDog || createdDog.length == 0) return res.status(400).send({
                         status: 'Error',
