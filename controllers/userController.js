@@ -48,7 +48,7 @@ const register = (req, res) => {
             // preparar mail
             const html = `<div style="display: block; margin: 0 auto; width: 100%; min-height: 600px; background-color: white; color: black; background-image: url(cid:patron_patitas); background-repeat: repeat;">
                             <div style="display: block; margin: 0 auto; width: 50%; min-height: 600px; background-color: #F6F8FC;">
-                                <img style="display: block; width: 10em; margin: 0 auto; padding-top: 50px;" src="cid:logo_pelu_canina" alt="logo peluquería canina snoopy">
+                                <img style="display: block; width: 10em; margin: 0 auto; padding-top: 50px;" src="cid:check_icon" alt="check icon blue">
                                 <h1 style="text-align: center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 2em; color: black;">Validación de registro de usuario</h1>
                                 <br />
                                 <br />
@@ -66,9 +66,9 @@ const register = (req, res) => {
                 subject: 'Validación de Registro de usuario',
                 html,
                 attachments: [{
-                        filename: 'logo_480x480.png',
-                        path: 'public/images/logo_480x480.png',
-                        cid: 'logo_pelu_canina'
+                        filename: 'check_icon_480x480.png',
+                        path: 'public/images/check_icon_480x480.png',
+                        cid: 'check_icon'
                     },
                     {
                         filename: 'patron_patitas.png',

@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import dogModel from "../models/Dog.js";
 import validate from "../helpers/validate.js";
 
