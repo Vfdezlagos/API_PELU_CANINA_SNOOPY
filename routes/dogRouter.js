@@ -9,7 +9,7 @@ const dogRouter = new Router();
 // Configuracion de subida multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, './uploads/album/');
+        cb(null, './uploads/dogs/');
     },
     filename: (req, file, cb) => {
         cb(null, 'Dog-' + Date.now() + '-' + file.originalname);
