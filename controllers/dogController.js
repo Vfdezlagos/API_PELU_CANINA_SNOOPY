@@ -169,8 +169,36 @@ const uploadDogImage = (req, res) => {
 
 }
 
+const dogList = (req, res) => {
+    // Obtener userId del usuario identificado
+    const userId = req.user.id;
+
+    // hacer un find
+    dogModel.find({user: userId}).exec()
+        .then(dogs => {
+            if(!dogs || dogs.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'No se encontraron perros de este usuario'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Lista de perros del usuario',
+                dogs
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al hacer la busqueda de lso perros'
+            });
+        });
+
+}
+
 export {
     test,
     register,
-    uploadDogImage
+    uploadDogImage,
+    dogList
 }

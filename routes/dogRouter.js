@@ -30,6 +30,7 @@ dogRouter.get('/test', dogController.test);
 
 dogRouter.post('/register', auth, dogController.register);
 dogRouter.post('/upload', [auth, uploads.single('file0')], dogController.uploadDogImage);
+dogRouter.get('/list', auth, dogController.dogList);
 
 // Exportar Router
 export default dogRouter;
