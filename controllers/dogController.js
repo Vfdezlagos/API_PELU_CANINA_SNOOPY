@@ -149,7 +149,7 @@ const uploadDogImage = (req, res) => {
                     const filePath = req.file.path;
                     fs.unlinkSync(filePath);
 
-                    return res.status(500),send({
+                    return res.status(500).send({
                         status: 'Error',
                         message: 'Error al intentar actualizar al perro'
                     });
@@ -161,7 +161,7 @@ const uploadDogImage = (req, res) => {
             const filePath = req.file.path;
             fs.unlinkSync(filePath);
 
-            return res.status(500),send({
+            return res.status(500).send({
                 status: 'Error',
                 message: 'Error al intentar buscar al perro en DB'
             });
