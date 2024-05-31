@@ -105,7 +105,6 @@ const uploadDogImage = (req, res) => {
         });
     }
 
-    
 
     // Hacer un findOne
     dogModel.findOne({user: userId, name: dogName}).exec()
@@ -118,9 +117,15 @@ const uploadDogImage = (req, res) => {
 
             // ver si la imagen asociada al perro no es default
             if(dog.image !== 'public/images/default_image_640x480.jpg') {
-                // Si no es default eliminar imagen del storage
-                const oldImagePath = dog.image;
-                fs.unlinkSync(oldImagePath);
+                console.log('..\\' + dog.image);
+                try {
+                    // Si no es default eliminar imagen del storage
+                    const oldImagePath = dog.image;
+                    fs.unlinkSync(oldImagePath);
+                } catch (error) {
+                    console.log('no se pudo borrar la imagen en el storage');
+                }
+                
             }
 
             // actualizar campo image en el perro seleccionado

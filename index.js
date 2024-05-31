@@ -20,7 +20,6 @@ app.use(express.urlencoded({extended: true}));
 connection();
 
 // Rutas
-
 app.use('/api/user', userRouter);
 app.use('/api/dog', dogRouter);
 
