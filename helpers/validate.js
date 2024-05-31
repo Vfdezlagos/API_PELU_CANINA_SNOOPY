@@ -118,6 +118,15 @@ const validate = {
 
         return true;
     },
+    imageExtension: (extension) => {
+        if(extension !== 'png' && extension !== 'jpg' && extension !== 'jpeg' && extension !== 'gif') {
+            console.error('la extension del archivo no es valida');
+            console.error('Debe ser: png, jpg, jpeg o gif');
+            return false;
+        };
+
+        return true;
+    },
 }
 
 export default validate;
