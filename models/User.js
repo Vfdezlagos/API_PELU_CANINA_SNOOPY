@@ -34,6 +34,10 @@ const userSchema = Schema({
         type: String,
         default: 'role-user'
     },
+    subscribed: {
+        type: Boolean,
+        default: false
+    },
     created_at: {
         type: Date,
         default: Date.now

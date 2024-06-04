@@ -9,5 +9,7 @@ userRouter.get('/test', userController.test);
 userRouter.post('/register', userController.register);
 userRouter.get('/validateUserRegister/:token?', authMailer, userController.validateRegister); // quedará como get de manera temporal despues cambiar a post
 userRouter.post('/login', userController.login);
+userRouter.post('/passwordChange', userController.passwordChange);
+userRouter.post('/passwordReset/:token?', authMailer, userController.passwordReset);
 
 export default userRouter;

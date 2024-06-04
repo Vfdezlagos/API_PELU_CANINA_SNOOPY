@@ -83,7 +83,7 @@ const register = (req, res) => {
                 .then(response => {
                     return res.status(200).send({
                         status: 'Success',
-                        message: 'Email enviado con exito',
+                        message: 'Email de Registro de usuario enviado con exito',
                         response
                     })
                 })
@@ -213,11 +213,151 @@ const login = (req, res) => {
         });
 }
 
+const passwordChange = (req, res) => {
+    // obtener datos del body
+    const bodyData = req.body;
+
+    // validar que llega email o username
+    if((!bodyData.username || (bodyData.username && bodyData.username.length == 0)) && (!bodyData.email || (bodyData.email && bodyData.email.length == 0))) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe indicar el email o username del usuario'
+    });
+
+    // hacer un findOne
+    userModel.findOne({$or: [{username: bodyData.username}, {email: bodyData.email}]}).exec()
+        .then(user => {
+
+            if(!user || user.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'Usuario no encontrado'
+            });
+
+            // crear token de recuperación de contraseña
+            const token = jwt.createMailerToken(user);
+
+            // configurar email
+            const html = `<div style="display: block; margin: 0 auto; width: 100%; min-height: 600px; background-color: white; color: black; background-image: url(cid:patron_patitas); background-repeat: repeat;">
+                            <div style="display: block; margin: 0 auto; width: 50%; min-height: 600px; background-color: #F6F8FC;">
+                                <img style="display: block; width: 10em; margin: 0 auto; padding-top: 50px;" src="cid:lock_icon" alt="check icon blue">
+                                <h1 style="text-align: center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 2em; color: black;">Solicitud de cambio de contraseña</h1>
+                                <br />
+                                <br />
+                                <h2 style="text-align: center; padding-left: 20px; padding-right: 20px; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.3em; color: black;">Presiona sobre el botón "Cambiar contraseña" para dirigirte al formulario de cambio de contraseña en Peluqueria canina Snoopy!</h2>
+                                <br />
+                                <div style="text-align: center;">
+                                    <a href="https://api-pelu-canina-snoopy.onrender.com/api/user/passwordReset/${token}"><button style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: 1.2em; background-color: #059669; width: fit-content; height: 50px; line-height: 40px; border: 2px solid #007A54; border-radius: 40px; color: white; margin-bottom: 1.5em;">Cambiar contraseña</button></a>
+                                </div>
+                                <p style="text-align: center; padding-bottom: 40px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; color: black;">El enlace estará disponible durante 2 horas. Luego tendrás que volver a solicitar el enlace.</p>
+                            </div>
+                        </div>`
+            
+            const options = {
+                to: user.email,
+                subject: 'Solicitud de cambio de contraseña',
+                html,
+                attachments: [
+                    {
+                        filename: 'lock_icon_480x480.png',
+                        path: 'public/images/lock_icon_480x480.png',
+                        cid: 'lock_icon'
+                    },
+                    {
+                        filename: 'patron_patitas.png',
+                        path: 'public/images/patron_patitas.png',
+                        cid: 'patron_patitas'
+                    }
+                ]
+            }
+
+            // mandar email
+
+            sendEmail(options)
+                .then(response => {
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Email de Cambio de contraseña enviado con exito',
+                        response
+                    })
+                })
+                .catch(error => {
+                    return res.status(500).send({
+                        status: 'Error',
+                        message: 'No se pudo enviar el Email'
+                    });
+                });
+            
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buscar al usuario en DB'
+            });
+        });
+
+}
+
+const passwordReset = async (req, res) => {   
+
+    // Obtener id del usuario identificado
+    const userId = req.user.id;
+
+    // obtener datos del body
+    const bodyData = req.body;
+
+    // verificar que llega password y password_verification
+    if((!bodyData.password || !bodyData.password_verification || bodyData.password.length == 0 || bodyData.password_verification.length == 0)) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe enviar los campos password y password_verification'
+    });
+
+    // guardar nueva pass en una variable
+    const newPass = bodyData.password;
+
+    // encriptar nueva contraseña contraseña
+    try {
+        const encriptedPass = await bcrypt.hash(newPass, 10);
+
+        // hacer un findByIdAndUpdate
+        userModel.findByIdAndUpdate(userId, {password: encriptedPass}, {new: true}).exec()
+            .then(updatedUser => {
+                if(!updatedUser || updatedUser.length == 0) return res.status(404).send({
+                    status: 'Error',
+                    message: 'Usuario no encontrado'
+                });
+
+                return res.status(200).send({
+                    status: 'Success',
+                    message: 'Contraseña actualizada con exito',
+                    new_password: newPass,
+                    user: updatedUser
+                });
+            })
+            .catch(error => {
+                return res.status(500).send({
+                    status: 'Error',
+                    message: 'Error al buscar al usuario en DB'
+                });
+            });
+
+    } catch (error) {
+        console.log('Error al intentar encriptar la contraseña');
+        return res.status(500).send({
+            status: 'Error',
+            message: 'Error al intentar encriptar la contraseña'
+        });
+    }
+    
+    
+    
+}
+
 
 
 export {
     test,
     register,
     validateRegister,
-    login
+    login,
+    passwordChange,
+    passwordReset
 }
