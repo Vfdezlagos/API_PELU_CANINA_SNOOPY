@@ -310,6 +310,12 @@ const passwordReset = async (req, res) => {
         message: 'Debe enviar los campos password y password_verification'
     });
 
+    // verificar que ambas password sean iguales
+    if(bodyData.password !== bodyData.password_verification) return res.status(400).send({
+        status: 'Error',
+        message: 'Las contraseñas no coinciden'
+    });
+
     // guardar nueva pass en una variable
     const newPass = bodyData.password;
 
