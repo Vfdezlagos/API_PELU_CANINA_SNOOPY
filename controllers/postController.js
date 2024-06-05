@@ -70,7 +70,6 @@ const register = (req, res) => {
     }
     const post = {...bodyData, ...images}
 
-    console.log(post);
 
     // hacer un create
     postModel.create(post)
@@ -104,6 +103,28 @@ const register = (req, res) => {
                 message: 'Error al intentar registrar el post en DB'
             });
         });
+}
+
+const listPosts = (req, res) => {
+    postModel.find().select('title description image1 image2 created_at').sort({created_at: -1}).exec()
+        .then(posts => {
+            if(!posts || posts.length == 0) return res.status(404).send({
+                status: 'Not Found',
+                message: 'No se encontraron publicaciones'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Lista de publicaciones',
+                posts
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al buscar publicaciones en DB'
+            });
+        })
 }
 
 const showImage = (req, res) => {
@@ -154,5 +175,6 @@ const showImage = (req, res) => {
 export {
     test,
     register,
-    showImage
+    showImage,
+    listPosts
 }
