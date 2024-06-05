@@ -1,7 +1,6 @@
 import dogModel from "../models/Dog.js";
 import validate from "../helpers/validate.js";
 import fs from "node:fs";
-import path from "node:path";
 
 const test = (req, res) => {
     return res.status(200).send({

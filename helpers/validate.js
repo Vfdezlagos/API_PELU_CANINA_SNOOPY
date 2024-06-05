@@ -118,12 +118,35 @@ const validate = {
 
         return true;
     },
+
     imageExtension: (extension) => {
         if(extension !== 'png' && extension !== 'jpg' && extension !== 'jpeg' && extension !== 'gif') {
             console.error('la extension del archivo no es valida');
             console.error('Debe ser: png, jpg, jpeg o gif');
             return false;
         };
+
+        return true;
+    },
+
+    Post: (post) => {
+
+        console.log(post);
+
+        if(!post.title || !post.description) {
+            console.log('Debe enviar los campos title y description');
+            return false;
+        }
+
+        if(post.title && validator.isEmpty(post.title)) {
+            console.log('title no puede ser vacio');
+            return false;
+        }
+
+        if(post.description && validator.isEmpty(post.description)){
+            console.log('description no puede ser vacio');
+            return false;
+        }
 
         return true;
     },

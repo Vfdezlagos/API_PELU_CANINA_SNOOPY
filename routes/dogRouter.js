@@ -7,9 +7,13 @@ import fs from "node:fs";
 // Crear Router
 const dogRouter = new Router();
 
+// Crear directorio upload si no existe
+if(!fs.existsSync('public/images/uploads/')) {
+    fs.mkdirSync('public/images/uploads/');
+}
+
 // crear directorio de imagenes de perros si no existe
 if(!fs.existsSync('public/images/uploads/dogs')) {
-    fs.mkdirSync('public/images/uploads/');
     fs.mkdirSync('public/images/uploads/dogs/');
 }
 
