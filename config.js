@@ -9,7 +9,8 @@ const config = {
     EMAIL_SECRET_PASS: process.env.EMAIL_SECRET_PASS,
     MAILER_SERVICE: process.env.MAILER_SERVICE,
     MAILER_HOST: process.env.MAILER_HOST,
-    MAILER_PORT: process.env.MAILER_PORT
+    MAILER_PORT: process.env.MAILER_PORT,
+    FRONTEND_HOST: process.env.FRONTEND_HOST
 }
 
 export default config;

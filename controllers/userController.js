@@ -3,6 +3,7 @@ import * as jwt from "../helpers/jwt.js";
 import sendEmail from "../helpers/mailer.js";
 import validate from "../helpers/validate.js";
 import bcrypt from "bcrypt";
+import config from "../config.js";
 
 const test = (req, res) => {
     return res.status(200).send({
@@ -45,6 +46,9 @@ const register = (req, res) => {
             // crear token con los datos del body
             const token = jwt.createRegisterToken(createdUser);
 
+            // const url objetivo
+            const url = `${config.FRONTEND_HOST}/completar_registro/${token}`
+
             // preparar mail
             const html = `<div style="display: block; margin: 0 auto; width: 100%; min-height: 600px; background-color: white; color: black; background-image: url(cid:patron_patitas); background-repeat: repeat;">
                             <div style="display: block; margin: 0 auto; width: 50%; min-height: 600px; background-color: #F6F8FC;">
@@ -55,7 +59,7 @@ const register = (req, res) => {
                                 <h2 style="text-align: center; padding-left: 20px; padding-right: 20px; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.3em; color: black;">Presiona sobre el botón "Completar mi registro" para validar tu cuenta de usuario en Peluqueria canina Snoopy!</h2>
                                 <br />
                                 <div style="text-align: center;">
-                                    <a href="https://api-pelu-canina-snoopy.onrender.com/api/user/validateUserRegister/${token}"><button style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: 1.2em; background-color: rgb(0, 183, 255); width: fit-content; height: 50px; line-height: 40px; border: 2px solid rgb(0, 183, 255); border-radius: 40px; color: white; margin-bottom: 1.5em;">Completar mi registro</button></a>
+                                    <a href="${url}"><button style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: 1.2em; background-color: rgb(0, 183, 255); width: fit-content; height: 50px; line-height: 40px; border: 2px solid rgb(0, 183, 255); border-radius: 40px; color: white; margin-bottom: 1.5em;">Completar mi registro</button></a>
                                 </div>
                                 <p style="text-align: center; padding-bottom: 40px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; color: black;">El enlace estará disponible durante 2 horas. Luego tendrás que volver a registrarte.</p>
                             </div>
