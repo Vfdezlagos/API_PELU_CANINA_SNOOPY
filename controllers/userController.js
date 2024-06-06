@@ -239,6 +239,9 @@ const passwordChange = (req, res) => {
             // crear token de recuperación de contraseña
             const token = jwt.createMailerToken(user);
 
+            // crear url destino
+            const url = `${config.FRONTEND_HOST}/password-change/${token}`  
+
             // configurar email
             const html = `<div style="display: block; margin: 0 auto; width: 100%; min-height: 600px; background-color: white; color: black; background-image: url(cid:patron_patitas); background-repeat: repeat;">
                             <div style="display: block; margin: 0 auto; width: 50%; min-height: 600px; background-color: #F6F8FC;">
@@ -249,7 +252,7 @@ const passwordChange = (req, res) => {
                                 <h2 style="text-align: center; padding-left: 20px; padding-right: 20px; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.3em; color: black;">Presiona sobre el botón "Cambiar contraseña" para dirigirte al formulario de cambio de contraseña en Peluqueria canina Snoopy!</h2>
                                 <br />
                                 <div style="text-align: center;">
-                                    <a href="https://api-pelu-canina-snoopy.onrender.com/api/user/passwordReset/${token}"><button style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: 1.2em; background-color: #059669; width: fit-content; height: 50px; line-height: 40px; border: 2px solid #007A54; border-radius: 40px; color: white; margin-bottom: 1.5em;">Cambiar contraseña</button></a>
+                                    <a href="${url}"><button style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: 1.2em; background-color: #059669; width: fit-content; height: 50px; line-height: 40px; border: 2px solid #007A54; border-radius: 40px; color: white; margin-bottom: 1.5em;">Cambiar contraseña</button></a>
                                 </div>
                                 <p style="text-align: center; padding-bottom: 40px; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; color: black;">El enlace estará disponible durante 2 horas. Luego tendrás que volver a solicitar el enlace.</p>
                             </div>
