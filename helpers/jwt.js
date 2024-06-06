@@ -51,6 +51,7 @@ const createRegisterToken = (user) => {
         password: user.password,
         phone: user.phone,
         address: user.addres,
+        subscribed: user.subscribed,
         iat: moment().unix(),
         exp: moment().add(2, "hours").unix()
     };
