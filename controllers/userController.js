@@ -1,19 +1,27 @@
 import userModel from "../models/User.js";
+import dogModel from "../models/Dog.js";
+import * as userHelper from "../helpers/userHelper.js";
 import * as jwt from "../helpers/jwt.js";
 import sendEmail from "../helpers/mailer.js";
 import validate from "../helpers/validate.js";
 import bcrypt from "bcrypt";
+import fs from "node:fs";
 import config from "../config.js";
 
-const test = (req, res) => {
+const test = async (req, res) => {
+    const response = await userHelper.getUserDogsImages('6668d57c69d90c75e1995339');
+    const dogImageNames = response.map(dog => dog.image);
+
+
     return res.status(200).send({
         status: 'Success',
-        message: 'ruta de prueba para controlador de usuarios'
+        message: 'ruta de prueba para controlador de usuarios',
+        dogImageNames
     });
 }
 
 
-
+// Registro de usuario
 const register = (req, res) => {
     // obtener datos del body
     const bodyData = req.body;
@@ -159,6 +167,8 @@ const validateRegister = async (req, res) => {
         });
 }
 
+
+// Login y Password Recovery
 const login = (req, res) => {
 
     // obtener datos del body
@@ -365,6 +375,174 @@ const passwordReset = async (req, res) => {
 }
 
 
+// Listar usuarios (solo puede acceder el admin)
+const list = (req, res) => {
+    // obtener usuario identificado
+    const user = req.user;
+    const role = user.role;
+
+    // verificar que sea admin
+    if(!role || role !== 'role-admin') return res.status(401).send({
+        status: 'Error',
+        message: 'Debe ser administrador para realizar esta acción'
+    });
+
+    userModel.find().exec()
+        .then(users => {
+            if(!users || users.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'No se encontraron usuarios'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Lista de usuarios',
+                users
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al buscar usuarios en DB'
+            });
+        });
+}
+
+const findById = (req, res) => {
+
+    // obtener usuario identificado
+    const user = req.user;
+    const role = user.role;
+
+    // verificar que sea admin
+    if(!role || role !== 'role-admin') return res.status(401).send({
+        status: 'Error',
+        message: 'Debe ser administrador para realizar esta acción'
+    });
+
+    // obtener id por url
+    const userId = req.params.id;
+
+    if(!userId || userId.length == 0) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe indicar el id del usuario por parametro de la url'
+    });
+
+    // hacer un findById
+    userModel.findById(userId).exec()
+        .then(user => {
+            if(!user || user.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'No se encontró al usuario'
+            });
+
+            return res.status(200).send({
+                status:'Success',
+                message: 'Usuario encontrado',
+                user
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al buscar al usuario en DB'
+            });
+        });
+}
+
+
+// Actualizar usuario
+const update = (req, res) => {
+    // obtener id por parametro
+    const userId = req.params.id;
+
+    if(!userId || userId.length == 0) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe indicar el id del usuario por parametro de la url'
+    });
+
+    // obtener datos del body
+    const bodyData = req.body;
+
+    // hacer un findByIdAndUpdate
+    userModel.findByIdAndUpdate(userId, bodyData, {new: true}).exec()
+        .then(updatedUser => {
+            if(!updatedUser || updatedUser.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'No se encontró al usuario a actualizar'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Usuario actualizado con exito',
+                user: updatedUser
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buscar al usuario en DB'
+            });
+        });
+}
+
+
+// Eliminar usuario
+const deleteUser = (req, res) => {
+    // obtener id por parametro
+    const userId = req.params.id;
+
+    if(!userId || userId.length == 0) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe indicar el id del usuario por parametro de la url'
+    });
+
+    // hacer un findByIdAndDelete
+    userModel.findByIdAndDelete(userId).exec()
+        .then(async deletedUser => {
+            if(!deletedUser || deletedUser.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'No se encontró al usuario a eliminar o ya fue eliminado anteriormente'
+            });
+
+            // hacer que se eliminen los perros registrados del usuario
+            try {
+                
+                // traer los nombres de las imagenes de los perros
+                const response = await userHelper.getUserDogsImages(userId);
+                const dogImageNames = response.map(dog => dog.image);
+                
+                // eliminar perros de DB
+                const dogsDeletedCounter = await dogModel.deleteMany({user: userId}).exec();
+
+                // borrar imagenes de los perros del usuario
+                dogImageNames.forEach(image => {
+                    let imagePath = "public/images/uploads/dogs/" + image;
+                    fs.unlinkSync(imagePath);
+                });
+
+                // devolver respuesta
+                return res.status(200).send({
+                    status: 'Success',
+                    message: 'Usuario y sus perros eliminados exitosamente',
+                    user: deletedUser,
+                    dogs_quantity: dogsDeletedCounter
+                });
+            } catch (error) {
+                return res.status(500).send({
+                    status: 'Error',
+                    message: 'Error al intentar eliminar los perros del usuario'
+                });
+            }
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al buscar al usuario en DB'
+            });
+        });
+}
+
 
 export {
     test,
@@ -372,5 +550,9 @@ export {
     validateRegister,
     login,
     passwordChange,
-    passwordReset
+    passwordReset,
+    list,
+    findById,
+    update,
+    deleteUser
 }

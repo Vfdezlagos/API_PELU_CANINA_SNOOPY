@@ -1,6 +1,7 @@
 import dogModel from "../models/Dog.js";
 import validate from "../helpers/validate.js";
 import fs from "node:fs";
+import path from "node:path";
 
 const test = (req, res) => {
     return res.status(200).send({
@@ -115,7 +116,7 @@ const uploadDogImage = (req, res) => {
             });
 
             // ver si la imagen asociada al perro no es default
-            if(dog.image !== 'public/images/default_image_640x480.jpg') {
+            if(dog.image !== 'default_image.jpg') {
                 console.log('..\\' + dog.image);
                 try {
                     // Si no es default eliminar imagen del storage
@@ -124,11 +125,10 @@ const uploadDogImage = (req, res) => {
                 } catch (error) {
                     console.log('no se pudo borrar la imagen en el storage');
                 }
-                
             }
 
             // actualizar campo image en el perro seleccionado
-            dogModel.findByIdAndUpdate(dog._id, {image: req.file.path}, {new:true}).exec()
+            dogModel.findByIdAndUpdate(dog._id, {image: req.file.filename}, {new:true}).exec()
                 .then(updatedDog => {
                     if(!updatedDog || updatedDog.length == 0 ) {
                         // eliminar archivo del directorio
@@ -200,9 +200,52 @@ const dogList = (req, res) => {
 
 }
 
+const showImage = (req, res) => {
+
+    if(!req.params.id) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe enviar el id del perro como parametro por la url'
+    });
+
+    // obtener id del perro por parametro
+    const dogId = req.params.id;
+
+    // hacer un find
+    dogModel.findById(dogId).exec()
+        .then(dog => {
+            if(!dog || dog.length == 0) return res.status(404).send({
+                status: 'Error',
+                message:'dog no encontrado'
+            });
+
+            // montar el path completo de la imagen
+            const fileName = dog.image;
+            const filePath = "public/images/uploads/dogs/" + fileName;
+
+            // Comprobar que existe el fichero
+            fs.stat(filePath, (error, exists) => {
+                if (error || !exists) return res.status(404).send({
+                    status: 'Error',
+                    message: 'El archivo no existe',
+                    error
+                });
+
+                // devolver el fichero
+                return res.sendFile(path.resolve(filePath));
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al hacer la busqueda del perro en DB'
+            });
+        });    
+}
+
 export {
     test,
     register,
     uploadDogImage,
-    dogList
+    dogList,
+    showImage
 }

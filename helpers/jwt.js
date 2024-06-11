@@ -23,7 +23,7 @@ const createToken = (user) => {
     return jwt.encode(payload, secret);
 }
 
-// Crear funcion para generar tokens para recuperacion de contraseñas
+// Crear funcion para generar tokens para enviar por emails
 const createMailerToken = (user) => {
 
     const payload = {
@@ -38,7 +38,6 @@ const createMailerToken = (user) => {
     // Devolver el token
     return jwt.encode(payload, secret);
 }
-
 
 // Crear funcion generar token para confirmacion de registro de usuario
 const createRegisterToken = (user) => {

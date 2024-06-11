@@ -15,11 +15,11 @@ const postSchema = Schema({
     },
     image1: {
         type: String,
-        default: 'public/images/default_image_640x480.jpg'
+        default: 'default_image.jpg'
     },
     image2: {
         type: String,
-        default: 'public/images/default_image_640x480.jpg'
+        default: 'default_image.jpg'
     },
     created_at: {
         type: Date,

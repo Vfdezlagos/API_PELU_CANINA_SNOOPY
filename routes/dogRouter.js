@@ -32,9 +32,15 @@ const uploads = multer({storage});
 // Rutas
 dogRouter.get('/test', dogController.test);
 
+// registro de perro y subida de imagen
 dogRouter.post('/register', auth, dogController.register);
 dogRouter.post('/upload', [auth, uploads.single('file0')], dogController.uploadDogImage);
+
+// liatsr perros del usuario identificado
 dogRouter.get('/list', auth, dogController.dogList);
+
+// mostrar imagen del perro
+dogRouter.get('/showimage/:id?', dogController.showImage);
 
 // Exportar Router
 export default dogRouter;

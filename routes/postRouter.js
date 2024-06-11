@@ -33,5 +33,9 @@ postRouter.get('/test', postController.test);
 postRouter.post('/register', [auth, uploads.array('images')], postController.register);
 postRouter.get('/showImage/:id?/:number?', postController.showImage);
 postRouter.get('/list', postController.listPosts);
+postRouter.post('/delete/:id?', postController.deletePostById);
+postRouter.patch('/update/:id?', postController.updatePost);
+postRouter.patch('/updateimage1', uploads.single('image'), postController.updatePostImage1);
+postRouter.patch('/updateimage2', uploads.single('image'), postController.updatePostImage2);
 
 export default postRouter;

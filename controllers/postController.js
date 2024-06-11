@@ -11,6 +11,8 @@ const test = (req, res) => {
     });
 }
 
+
+// Registro de post
 const register = (req, res) => {
     // Obtener role del usuario identificado
     const role = req.user.role;
@@ -105,6 +107,8 @@ const register = (req, res) => {
         });
 }
 
+
+// Listado de posts y mostrar imagen
 const listPosts = (req, res) => {
     postModel.find().select('title description image1 image2 created_at').sort({created_at: -1}).exec()
         .then(posts => {
@@ -172,9 +176,197 @@ const showImage = (req, res) => {
         });    
 }
 
+
+// Eliminar post
+const deletePostById = (req, res) => {
+    // Obtener id del post por parametro
+    const postId = req.params.id;
+
+    // hacer un findByIdAndDelete
+    postModel.findByIdAndDelete(postId)
+        .then(deletedPost => {
+
+            if(!deletedPost) return res.status(404).send({
+                status: 'Error',
+                message: 'El post no pudo ser encontrado o ya ha sido eliminado'
+            });
+
+            // Eliminar imágenes relacionadas al post
+            const image1Path = "public/images/uploads/posts/" + deletedPost.image1;
+            const image2Path = "public/images/uploads/posts/" + deletedPost.image2;
+            fs.unlinkSync(image1Path);
+            fs.unlinkSync(image2Path);
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Post eliminado exitosamente'
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar eliminar el post en DB'
+            });
+        });
+}
+
+
+// actualizar post
+const updatePost = (req, res) => {
+    // obtener datos del body y id por parametro
+    const bodyData = req.body;
+    const postId = req.params.id;
+    
+    // hacer un findOneAndUpdate
+    postModel.findOneAndUpdate({_id: postId}, bodyData, {new: true})
+        .then(updatedPost => {
+            if(!updatedPost) return res.status(404).send({
+                status: 'Error',
+                message: 'El post no pudo ser encontrado o actualizado'
+            });
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Post actualizado exitosamente',
+                updatedPost
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar actualizar el post en DB'
+            });
+        });
+}
+
+const updatePostImage1 = (req, res) => {
+    // Obtener id del post por body
+    const postId = req.body.id;
+
+    // Obtener filename y path del archivo
+    const filename = req.file.filename;
+    const image1Path = req.file.path;
+
+    // hacer un findById
+    postModel.findById(postId).exec()
+        .then(post => {
+
+            if(!post || post.length == 0) {
+                // si no encontró el post, borrar imagen subida y devolver error
+                fs.unlinkSync(image1Path);
+
+                return res.status(400).send({
+                    status: 'Error',
+                    message: 'No se encontró el post o este ya fue eliminado'
+                });
+            }
+
+            // obtener valor de image1 del post encontrado
+            const oldImage1 = post.image1;
+            
+            // hacer un findByIdAndUpdate
+            postModel.findByIdAndUpdate(postId, {image1: filename}, {new: true})
+                .then(updatedPost => {
+                    if(!updatedPost) {
+                        // si no se pudo actualizar el post, borrar imagen subida
+                        fs.unlinkSync(image1Path);
+                        return res.status(404).send({
+                            status: 'Error',
+                            message: 'El post no pudo ser encontrado o actualizado'
+                        });
+                    }
+                    // si se pudo actualizar, borrar image1
+                    const oldImage1Path = "public/images/uploads/posts/" + oldImage1;
+                    fs.unlinkSync(oldImage1Path);
+                    // devolver respuesta
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Imagen1 del post actualizada exitosamente',
+                        updatedPost
+                    });
+                })
+                .catch(error => {
+                    return res.status(500).send({
+                        status: 'Error',
+                        message: 'Error al intentar actualizar la imagen1 del post en DB'
+                    });
+                });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buscar el post en DB'
+            });
+        });
+}
+
+const updatePostImage2 = (req, res) => {
+    // Obtener id del post por body
+    const postId = req.body.id;
+
+    // Obtener filename y path del archivo
+    const filename = req.file.filename;
+    const image2Path = req.file.path;
+
+    // hacer un findById
+    postModel.findById(postId).exec()
+        .then(post => {
+
+            if(!post || post.length == 0) {
+                // si no encontró el post, borrar imagen subida y devolver error
+                fs.unlinkSync(image2Path);
+
+                return res.status(400).send({
+                    status: 'Error',
+                    message: 'No se encontró el post o este ya fue eliminado'
+                });
+            }
+
+            // obtener valor de image1 del post encontrado
+            const oldImage2 = post.image2;
+            
+            // hacer un findByIdAndUpdate
+            postModel.findByIdAndUpdate(postId, {image2: filename}, {new: true})
+                .then(updatedPost => {
+                    if(!updatedPost) {
+                        // si no se pudo actualizar el post, borrar imagen subida
+                        fs.unlinkSync(image2Path);
+                        return res.status(404).send({
+                            status: 'Error',
+                            message: 'El post no pudo ser encontrado o actualizado'
+                        });
+                    }
+                    // si se pudo actualizar, borrar image1
+                    const oldImage2Path = "public/images/uploads/posts/" + oldImage2;
+                    fs.unlinkSync(oldImage2Path);
+                    // devolver respuesta
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Imagen2 del post actualizada exitosamente',
+                        updatedPost
+                    });
+                })
+                .catch(error => {
+                    return res.status(500).send({
+                        status: 'Error',
+                        message: 'Error al intentar actualizar la imagen2 del post en DB'
+                    });
+                });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buscar el post en DB'
+            });
+        });
+}
+
 export {
     test,
     register,
     showImage,
-    listPosts
+    listPosts,
+    deletePostById,
+    updatePost,
+    updatePostImage1,
+    updatePostImage2
 }
