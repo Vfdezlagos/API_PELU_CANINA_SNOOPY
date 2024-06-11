@@ -28,7 +28,7 @@ const dogSchema = Schema({
     },
     image: {
         type: String,
-        default: 'default_image.jpg'
+        default: 'default_image.png'
     },
     created_at: {
         type: Date,

@@ -517,8 +517,10 @@ const deleteUser = (req, res) => {
 
                 // borrar imagenes de los perros del usuario
                 dogImageNames.forEach(image => {
-                    let imagePath = "public/images/uploads/dogs/" + image;
-                    fs.unlinkSync(imagePath);
+                    if(image !== 'default_image.png'){
+                        let imagePath = "public/images/uploads/dogs/" + image;
+                        fs.unlinkSync(imagePath);
+                    }
                 });
 
                 // devolver respuesta

@@ -110,10 +110,16 @@ const uploadDogImage = (req, res) => {
     dogModel.findOne({user: userId, name: dogName}).exec()
         .then(dog => {
 
-            if(!dog || dog.length == 0) return res.status(404).send({
-                status: 'Error',
-                message: 'No se encontró el registro del perro'
-            });
+            if(!dog || dog.length == 0){
+                // eliminar archivo del directorio
+                const filePath = req.file.path;
+                fs.unlinkSync(filePath);
+
+                return res.status(404).send({
+                    status: 'Error',
+                    message: 'No se encontró el registro del perro'
+                });
+            }
 
             // ver si la imagen asociada al perro no es default
             if(dog.image !== 'default_image.jpg') {
