@@ -192,10 +192,15 @@ const deletePostById = (req, res) => {
             });
 
             // Eliminar imágenes relacionadas al post
-            const image1Path = "public/images/uploads/posts/" + deletedPost.image1;
-            const image2Path = "public/images/uploads/posts/" + deletedPost.image2;
-            fs.unlinkSync(image1Path);
+            if(deletedPost.image1 !== 'default_image.png'){
+                const image1Path = "public/images/uploads/posts/" + deletedPost.image1;
+                fs.unlinkSync(image1Path);
+            }
+
+            if(deletedPost.image2 !== 'default_image.png'){
+                const image2Path = "public/images/uploads/posts/" + deletedPost.image2;
             fs.unlinkSync(image2Path);
+            }
 
             return res.status(200).send({
                 status: 'Success',
@@ -275,8 +280,10 @@ const updatePostImage1 = (req, res) => {
                         });
                     }
                     // si se pudo actualizar, borrar image1
-                    const oldImage1Path = "public/images/uploads/posts/" + oldImage1;
-                    fs.unlinkSync(oldImage1Path);
+                    if(oldImage1 !== 'default_image.png'){
+                        const oldImage1Path = "public/images/uploads/posts/" + oldImage1;
+                        fs.unlinkSync(oldImage1Path);
+                    }
                     // devolver respuesta
                     return res.status(200).send({
                         status: 'Success',
@@ -336,8 +343,10 @@ const updatePostImage2 = (req, res) => {
                         });
                     }
                     // si se pudo actualizar, borrar image1
-                    const oldImage2Path = "public/images/uploads/posts/" + oldImage2;
-                    fs.unlinkSync(oldImage2Path);
+                    if(oldImage2 !== 'default_image.png'){
+                        const oldImage2Path = "public/images/uploads/posts/" + oldImage2;
+                        fs.unlinkSync(oldImage2Path);
+                    }
                     // devolver respuesta
                     return res.status(200).send({
                         status: 'Success',
