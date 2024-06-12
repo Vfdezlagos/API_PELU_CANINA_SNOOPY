@@ -19,18 +19,6 @@ const register = (req, res) => {
 
     // si no es admin devolver error
     if(role !== 'role-admin'){
-
-        // Eliminar archivos subidos
-        if(req.files[0]){
-            const image1Path = req.files[0].path;
-            fs.unlinkSync(image1Path);
-        }
-
-        if(req.files[1]){
-            const image2Path = req.files[1].path;
-            fs.unlinkSync(image2Path);
-        }
-
         return res.status(400).send({
             status: 'Error',
             message: 'Debes ser administrador para acceder a esta acción'
@@ -40,25 +28,11 @@ const register = (req, res) => {
 
     // obtener datos del body
     const bodyData = req.body;
-    const files = req.files;
 
     
 
     // verificar datos del body
     if(!validate.Post(bodyData)){
-
-        // Eliminar archivos subidos
-        if(files[0]){
-            const image1Path = files[0].path;
-            fs.unlinkSync(image1Path);
-        }
-
-        if(files[1]){
-            const image2Path = files[1].path;
-            fs.unlinkSync(image2Path);
-        }
-
-
         return res.status(400).send({
             status: 'Error',
             message: 'Faltan campos por mandar o hay algun dato que no es valido (revisar consola)'
@@ -66,11 +40,7 @@ const register = (req, res) => {
     }
 
     // crear objeto post a guardar en DB
-    const images = {
-        image1: files[1].filename,
-        image2: files[0].filename
-    }
-    const post = {...bodyData, ...images}
+    const post = {...bodyData}
 
 
     // hacer un create
@@ -88,18 +58,6 @@ const register = (req, res) => {
             });
         })
         .catch(error => {
-
-            // Eliminar archivos subidos
-            if(req.files[0]){
-                const image1Path = req.files[0].path;
-                fs.unlinkSync(image1Path);
-            }
-
-            if(req.files[1]){
-                const image2Path = req.files[1].path;
-                fs.unlinkSync(image2Path);
-        }
-
             return res.status(500).send({
                 status: 'Error',
                 message: 'Error al intentar registrar el post en DB'

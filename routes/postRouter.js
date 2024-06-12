@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
 const uploads = multer({storage});
 
 postRouter.get('/test', postController.test);
-postRouter.post('/register', [auth, uploads.array('images')], postController.register);
+postRouter.post('/register', auth, postController.register);
 postRouter.get('/showImage/:id?/:number?', postController.showImage);
 postRouter.get('/list', postController.listPosts);
 postRouter.post('/delete/:id?', postController.deletePostById);
