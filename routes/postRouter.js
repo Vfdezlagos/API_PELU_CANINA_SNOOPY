@@ -30,12 +30,22 @@ const storage = multer.diskStorage({
 const uploads = multer({storage});
 
 postRouter.get('/test', postController.test);
+
+// registro de post
 postRouter.post('/register', auth, postController.register);
-postRouter.get('/showImage/:id?/:number?', postController.showImage);
-postRouter.get('/list', postController.listPosts);
-postRouter.post('/delete/:id?', postController.deletePostById);
+
+// Actualizar post y actualizar imagenes
 postRouter.patch('/update/:id?', postController.updatePost);
 postRouter.patch('/updateimage1', uploads.single('image'), postController.updatePostImage1);
 postRouter.patch('/updateimage2', uploads.single('image'), postController.updatePostImage2);
+
+// mostrar imagenes del post
+postRouter.get('/showImage/:id?/:number?', postController.showImage);
+
+// listar posts
+postRouter.get('/list', postController.listPosts);
+
+// eliminar post
+postRouter.post('/delete/:id?', postController.deletePostById);
 
 export default postRouter;

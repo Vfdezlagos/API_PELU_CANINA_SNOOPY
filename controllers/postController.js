@@ -162,7 +162,8 @@ const deletePostById = (req, res) => {
 
             return res.status(200).send({
                 status: 'Success',
-                message: 'Post eliminado exitosamente'
+                message: 'Post eliminado exitosamente',
+                post: deletedPost
             });
         })
         .catch(error => {
