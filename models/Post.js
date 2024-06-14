@@ -21,6 +21,10 @@ const postSchema = Schema({
         type: String,
         default: 'default_image.png'
     },
+    active: {
+        type: Boolean,
+        default: false
+    },
     created_at: {
         type: Date,
         default: Date.now

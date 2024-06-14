@@ -44,8 +44,10 @@ postRouter.get('/showImage/:id?/:number?', postController.showImage);
 
 // listar posts
 postRouter.get('/list', postController.listPosts);
+postRouter.get('/find/:id?', postController.findPostById);
 
 // eliminar post
 postRouter.post('/delete/:id?', postController.deletePostById);
+postRouter.post('/changeStatus/:id?', postController.changePostStatus);
 
 export default postRouter;

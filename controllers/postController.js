@@ -68,9 +68,26 @@ const register = (req, res) => {
 
 // Listado de posts y mostrar imagen
 const listPosts = (req, res) => {
-    postModel.find().select('title description image1 image2 created_at').sort({created_at: -1}).exec()
-        .then(posts => {
-            if(!posts || posts.length == 0) return res.status(404).send({
+    // Obtener page por url
+    const page = req.params.page ? req.params.page : 1;
+
+    // configurar paginate
+    const custom_labels = {
+        docs: 'posts',
+        totalDocs: 'totalPosts',
+    }
+
+    const options = {
+        select: '-_id -__v -active',
+        sort: {created_at: -1},
+        page,
+        limit: 10,
+        customLabels: custom_labels
+    }
+
+    postModel.paginate({active: true}, options)
+        .then(data => {
+            if(!data || data.length == 0) return res.status(404).send({
                 status: 'Not Found',
                 message: 'No se encontraron publicaciones'
             });
@@ -78,7 +95,7 @@ const listPosts = (req, res) => {
             return res.status(200).send({
                 status: 'Success',
                 message: 'Lista de publicaciones',
-                posts
+                data
             });
         })
         .catch(error => {
@@ -87,6 +104,37 @@ const listPosts = (req, res) => {
                 message: 'Error al buscar publicaciones en DB'
             });
         })
+}
+
+const findPostById = (req, res) => {
+    // obtener id por parametro
+    const postId = req.params.id;
+
+    if(!postId || postId.length == 0) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe enviar el id del post por url'
+    });
+
+    // hacer un findById
+    postModel.findById(postId).exec()
+        .then(post => {
+            if(!post || post.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'No se encontró el post'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Post encontrado',
+                post
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buecar el post en DB'
+            });
+        });
 }
 
 const showImage = (req, res) => {
@@ -172,6 +220,53 @@ const deletePostById = (req, res) => {
                 message: 'Error al intentar eliminar el post en DB'
             });
         });
+}
+
+const changePostStatus = (req, res) => {
+    // obtener id del post por url
+    const postId = req.params.id;
+
+    if(!postId || postId.length == 0) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe enviar el id del post por url'
+    });
+
+    // hacer un findById
+    postModel.findById(postId).exec()
+        .then(post => {
+            if(!post || post.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'No se encontró el post'
+            });
+
+            let status = post.active == true ? false : true;
+
+            postModel.findByIdAndUpdate(post._id, {active : status}, {new: true}).exec()
+                .then(updatedPost => {
+                    if(!updatedPost || updatedPost.length == 0) return res.status(404).send({
+                        status: 'Error',
+                        message: 'No se encontró el post al actualizar'
+                    });
+
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Post habilitado o inahibilitado con éxito',
+                        post: updatedPost
+                    });
+                })
+                .catch(error => {
+                    return res.status(500).send({
+                        status: 'Error',
+                        message: 'Error al intentar actualizar el post'
+                    });
+                });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buecar el post en DB'
+            });
+        })
 }
 
 
@@ -331,10 +426,12 @@ const updatePostImage2 = (req, res) => {
 export {
     test,
     register,
-    showImage,
     listPosts,
+    findPostById,
+    showImage,
     deletePostById,
+    changePostStatus,
     updatePost,
     updatePostImage1,
-    updatePostImage2
+    updatePostImage2,
 }
