@@ -67,7 +67,7 @@ const register = (req, res) => {
 
 
 // Listado de posts y mostrar imagen
-const listPosts = (req, res) => {
+const listPaginate = (req, res) => {
     // Obtener page por url
     const page = req.params.page ? req.params.page : 1;
 
@@ -104,6 +104,28 @@ const listPosts = (req, res) => {
                 message: 'Error al buscar publicaciones en DB'
             });
         })
+}
+
+const listPosts = (req, res) => {
+    postModel.find({active: true}).select('-_id -__v').exec()
+        .then(posts => {
+            if(!posts || posts.length == 0) return res.status(404).send({
+                status: 'Not Found',
+                message: 'No se encontraron publicaciones'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Listado de publicaciones',
+                posts
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buscar publicaciones en DB'
+            });
+        });
 }
 
 const findPostById = (req, res) => {
@@ -427,6 +449,7 @@ export {
     test,
     register,
     listPosts,
+    listPaginate,
     findPostById,
     showImage,
     deletePostById,
