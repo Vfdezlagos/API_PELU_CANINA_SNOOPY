@@ -107,7 +107,7 @@ const listPaginate = (req, res) => {
 }
 
 const listPosts = (req, res) => {
-    postModel.find({active: true}).select('-__v').exec()
+    postModel.find({active: true}).select('-__v').sort({created_at: -1}).exec()
         .then(posts => {
             if(!posts || posts.length == 0) return res.status(404).send({
                 status: 'Not Found',
