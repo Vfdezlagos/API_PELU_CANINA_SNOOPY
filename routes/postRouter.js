@@ -35,9 +35,9 @@ postRouter.get('/test', postController.test);
 postRouter.post('/register', auth, postController.register);
 
 // Actualizar post y actualizar imagenes
-postRouter.patch('/update/:id?', postController.updatePost);
-postRouter.patch('/updateimage1', uploads.single('image'), postController.updatePostImage1);
-postRouter.patch('/updateimage2', uploads.single('image'), postController.updatePostImage2);
+postRouter.patch('/update/:id?', auth, postController.updatePost);
+postRouter.patch('/updateimage1', [auth, uploads.single('image')], postController.updatePostImage1);
+postRouter.patch('/updateimage2', [auth, uploads.single('image')], postController.updatePostImage2);
 
 // mostrar imagenes del post
 postRouter.get('/showImage/:id?/:number?', postController.showImage);
@@ -45,11 +45,11 @@ postRouter.get('/showImage/:id?/:number?', postController.showImage);
 // listar posts
 postRouter.get('/list', postController.listPosts);
 postRouter.get('/listPosts/:page?', postController.listPaginate);
-postRouter.get('/listDisabled/:page?', postController.listDisabledPaginate);
-postRouter.get('/find/:id?', postController.findPostById);
+postRouter.get('/listDisabled/:page?', auth, postController.listDisabledPaginate);
+postRouter.get('/find/:id?', auth, postController.findPostById);
 
 // eliminar post
-postRouter.post('/delete/:id?', postController.deletePostById);
-postRouter.post('/changeStatus/:id?', postController.changePostStatus);
+postRouter.post('/delete/:id?', auth, postController.deletePostById);
+postRouter.post('/changeStatus/:id?', auth, postController.changePostStatus);
 
 export default postRouter;

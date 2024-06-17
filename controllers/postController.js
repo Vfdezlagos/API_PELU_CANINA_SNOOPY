@@ -15,10 +15,10 @@ const test = (req, res) => {
 // Registro de post
 const register = (req, res) => {
     // Obtener role del usuario identificado
-    const role = req.user.role;
+    const user = req.user;
 
     // si no es admin devolver error
-    if(role !== 'role-admin'){
+    if(!validate.Admin(user)){
         return res.status(400).send({
             status: 'Error',
             message: 'Debes ser administrador para acceder a esta acción'
@@ -107,6 +107,18 @@ const listPaginate = (req, res) => {
 }
 
 const listDisabledPaginate = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // Obtener page por url
     const page = req.params.page ? req.params.page : 1;
 
@@ -168,6 +180,18 @@ const listPosts = (req, res) => {
 }
 
 const findPostById = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // obtener id por parametro
     const postId = req.params.id;
 
@@ -246,6 +270,18 @@ const showImage = (req, res) => {
 
 // Eliminar post
 const deletePostById = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // Obtener id del post por parametro
     const postId = req.params.id;
 
@@ -284,6 +320,18 @@ const deletePostById = (req, res) => {
 }
 
 const changePostStatus = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // obtener id del post por url
     const postId = req.params.id;
 
@@ -333,6 +381,18 @@ const changePostStatus = (req, res) => {
 
 // actualizar post
 const updatePost = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // obtener datos del body y id por parametro
     const bodyData = req.body;
     const postId = req.params.id;
@@ -359,6 +419,18 @@ const updatePost = (req, res) => {
 }
 
 const updatePostImage1 = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // Obtener id del post por body
     const postId = req.body.id;
 
@@ -422,6 +494,18 @@ const updatePostImage1 = (req, res) => {
 }
 
 const updatePostImage2 = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // Obtener id del post por body
     const postId = req.body.id;
 

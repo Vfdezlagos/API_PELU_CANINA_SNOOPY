@@ -150,6 +150,12 @@ const validate = {
 
         return true;
     },
+
+    Admin: (user) => {
+        if(!user.role || user.role !== 'role-admin') return false;
+
+        return true;
+    },
 }
 
 export default validate;

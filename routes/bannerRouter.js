@@ -2,6 +2,7 @@ import * as bannerController from '../controllers/bannerController.js';
 import { Router } from 'express';
 import fs from 'node:fs';
 import multer from 'multer';
+import auth from '../middlewares/auth.js';
 
 const bannerRouter = new Router();
 
@@ -31,13 +32,21 @@ const uploads = multer({storage});
 // Rutas
 bannerRouter.get('/test', bannerController.test);
 
-bannerRouter.post('/register', bannerController.register);
-bannerRouter.patch('/update/:id?', bannerController.update);
-bannerRouter.patch('/updateimage', uploads.single('image'), bannerController.updateImage);
+// registro
+bannerRouter.post('/register', auth, bannerController.register);
+
+// actualizacion
+bannerRouter.patch('/update/:id?', auth, bannerController.update);
+bannerRouter.patch('/updateimage', auth, uploads.single('image'), bannerController.updateImage);
+
+// listar
 bannerRouter.get('/list/:page?', bannerController.listBanners);
-bannerRouter.get('/listDisabled/:page?', bannerController.listDisabled);
-bannerRouter.get('/find/:id?', bannerController.getBannerById);
-bannerRouter.patch('/changeStatus/:id?', bannerController.changeStatus);
-bannerRouter.post('/delete/:id?', bannerController.deleteBanner);
+bannerRouter.get('/listDisabled/:page?', auth, bannerController.listDisabled);
+bannerRouter.get('/find/:id?', auth, bannerController.getBannerById);
+bannerRouter.get('/showimage/:id?', bannerController.showImage);
+
+// eliminar
+bannerRouter.patch('/changeStatus/:id?', auth, bannerController.changeStatus);
+bannerRouter.post('/delete/:id?', auth, bannerController.deleteBanner);
 
 export default bannerRouter;

@@ -1,5 +1,6 @@
 import bannerModel from "../models/Banner.js";
 import fs from 'node:fs';
+import validate from "../helpers/validate.js";
 
 const test = (req, res) => {
     return res.status(200).send({
@@ -10,6 +11,18 @@ const test = (req, res) => {
 
 
 const register = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // Obtener datos del body
     const bodyData = req.body;
 
@@ -46,6 +59,18 @@ const register = (req, res) => {
 }
 
 const update = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // obtener id del banner por url
     const bannerId = req.params.id;
 
@@ -80,6 +105,18 @@ const update = (req, res) => {
 }
 
 const updateImage = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // Obtener id del banner por body
     const bannerId = req.body.id;
 
@@ -152,6 +189,18 @@ const updateImage = (req, res) => {
 }
 
 const getBannerById = (req, res) => {
+
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // verificar que llega el id por parametro
     if(!req.params.id || req.params.id.length == 0) return res.status(400).send({
         status: 'Error',
@@ -224,6 +273,17 @@ const listBanners = (req, res) => {
 
 const listDisabled = (req, res) => {
 
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // Obtener page desde url
     const page = req.params.page ? req.params.page : 1;
 
@@ -262,7 +322,60 @@ const listDisabled = (req, res) => {
         });
 }
 
+const showImage = (req, res) => {
+
+    if(!req.params.id) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe enviar el id del banner como parametro por la url'
+    });
+
+    // obtener id del perro por parametro
+    const bannerId = req.params.id;
+
+    // hacer un find
+    bannerModel.findById(bannerId).exec()
+        .then(banner => {
+            if(!banner || banner.length == 0) return res.status(404).send({
+                status: 'Error',
+                message:'banner no encontrado'
+            });
+
+            // montar el path completo de la imagen
+            const fileName = banner.image;
+            const filePath = "public/images/uploads/banners/" + fileName;
+
+            // Comprobar que existe el fichero
+            fs.stat(filePath, (error, exists) => {
+                if (error || !exists) return res.status(404).send({
+                    status: 'Error',
+                    message: 'El archivo no existe',
+                    error
+                });
+
+                // devolver el fichero
+                return res.sendFile(path.resolve(filePath));
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al hacer la busqueda del perro en DB'
+            });
+        });    
+}
+
 const changeStatus = (req, res) => {
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // verificar que llega el id por url
     if(!req.params.id || req.params.id.length == 0) return res.status(400).send({
         status: 'Error',
@@ -313,6 +426,17 @@ const changeStatus = (req, res) => {
 }
 
 const deleteBanner = (req, res) => {
+    // Obtener role del usuario identificado
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
     // verificar que llega el id por url
     if(!req.params.id || req.params.id.length == 0) return res.status(400).send({
         status: 'Error',
@@ -363,6 +487,7 @@ export {
     listBanners,
     listDisabled,
     getBannerById,
+    showImage,
     changeStatus,
     deleteBanner
 }
