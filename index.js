@@ -6,6 +6,7 @@ import config from "./config.js";
 import userRouter from "./routes/userRouter.js";
 import dogRouter from "./routes/dogRouter.js";
 import postRouter from "./routes/postRouter.js";
+import bannerRouter from "./routes/bannerRouter.js";
 
 // crear servidor y asignar puerto
 const app = express();
@@ -24,6 +25,7 @@ connection();
 app.use('/api/user', userRouter);
 app.use('/api/dog', dogRouter);
 app.use('/api/post', postRouter);
+app.use('/api/banner', bannerRouter);
 
 app.get('/', (req, res) => {
     return res.status(200).send({

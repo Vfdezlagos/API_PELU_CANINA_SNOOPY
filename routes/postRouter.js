@@ -45,6 +45,7 @@ postRouter.get('/showImage/:id?/:number?', postController.showImage);
 // listar posts
 postRouter.get('/list', postController.listPosts);
 postRouter.get('/listPosts/:page?', postController.listPaginate);
+postRouter.get('/listDisabled/:page?', postController.listDisabledPaginate);
 postRouter.get('/find/:id?', postController.findPostById);
 
 // eliminar post

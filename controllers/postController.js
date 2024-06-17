@@ -106,6 +106,45 @@ const listPaginate = (req, res) => {
         })
 }
 
+const listDisabledPaginate = (req, res) => {
+    // Obtener page por url
+    const page = req.params.page ? req.params.page : 1;
+
+    // configurar paginate
+    const custom_labels = {
+        docs: 'posts',
+        totalDocs: 'totalPosts',
+    }
+
+    const options = {
+        select: '-__v -active',
+        sort: {created_at: -1},
+        page,
+        limit: 10,
+        customLabels: custom_labels
+    }
+
+    postModel.paginate({active: false}, options)
+        .then(data => {
+            if(!data || data.length == 0) return res.status(404).send({
+                status: 'Not Found',
+                message: 'No se encontraron publicaciones'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Lista de publicaciones',
+                data
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al buscar publicaciones en DB'
+            });
+        })
+}
+
 const listPosts = (req, res) => {
     postModel.find({active: true}).select('-__v').sort({created_at: -1}).exec()
         .then(posts => {
@@ -227,7 +266,7 @@ const deletePostById = (req, res) => {
 
             if(deletedPost.image2 !== 'default_image.png'){
                 const image2Path = "public/images/uploads/posts/" + deletedPost.image2;
-            fs.unlinkSync(image2Path);
+                fs.unlinkSync(image2Path);
             }
 
             return res.status(200).send({
@@ -408,7 +447,7 @@ const updatePostImage2 = (req, res) => {
             const oldImage2 = post.image2;
             
             // hacer un findByIdAndUpdate
-            postModel.findByIdAndUpdate(postId, {image2: filename}, {new: true})
+            postModel.findByIdAndUpdate(postId, {image2: filename, active: true}, {new: true})
                 .then(updatedPost => {
                     if(!updatedPost) {
                         // si no se pudo actualizar el post, borrar imagen subida
@@ -450,6 +489,7 @@ export {
     register,
     listPosts,
     listPaginate,
+    listDisabledPaginate,
     findPostById,
     showImage,
     deletePostById,
