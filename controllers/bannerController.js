@@ -1,5 +1,6 @@
 import bannerModel from "../models/Banner.js";
 import fs from 'node:fs';
+import path from "node:path";
 import validate from "../helpers/validate.js";
 
 const test = (req, res) => {
