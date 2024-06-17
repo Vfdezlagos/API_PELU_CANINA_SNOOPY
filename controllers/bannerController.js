@@ -161,7 +161,7 @@ const updateImage = (req, res) => {
                     // devolver respuesta
                     return res.status(200).send({
                         status: 'Success',
-                        message: 'Imagen1 del banner actualizada exitosamente',
+                        message: 'Imagen del banner actualizada exitosamente',
                         updatedBanner
                     });
                 })
@@ -172,7 +172,7 @@ const updateImage = (req, res) => {
 
                     return res.status(500).send({
                         status: 'Error',
-                        message: 'Error al intentar actualizar la imagen1 del banner en DB'
+                        message: 'Error al intentar actualizar la imagen del banner en DB'
                     });
                 });
         })
@@ -311,7 +311,7 @@ const listDisabled = (req, res) => {
 
             return res.status(200).send({
                 status: 'Success',
-                message: 'Lista de banners',
+                message: 'Lista de banners Inactivos',
                 banners
             });
         })
