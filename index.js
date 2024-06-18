@@ -12,10 +12,16 @@ import bannerRouter from "./routes/bannerRouter.js";
 const app = express();
 const port = config.PORT;
 
-app.options('*', cors());
+const corsOptions = {
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "allowedHeaders": "Content-Type,Authorization",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+};
 
 // aplicar middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
