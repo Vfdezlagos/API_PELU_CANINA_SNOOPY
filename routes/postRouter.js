@@ -50,6 +50,6 @@ postRouter.get('/find/:id?', auth, postController.findPostById);
 
 // eliminar post
 postRouter.post('/delete/:id?', auth, postController.deletePostById);
-postRouter.patch('/changeStatus/:id?', auth, postController.changePostStatus);
+postRouter.post('/changeStatus/:id?', auth, postController.changePostStatus);
 
 export default postRouter;
