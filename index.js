@@ -12,6 +12,8 @@ import bannerRouter from "./routes/bannerRouter.js";
 const app = express();
 const port = config.PORT;
 
+app.options('*', cors());
+
 // aplicar middlewares
 app.use(cors());
 app.use(express.json());

@@ -35,9 +35,9 @@ postRouter.get('/test', postController.test);
 postRouter.post('/register', auth, postController.register);
 
 // Actualizar post y actualizar imagenes
-postRouter.post('/update/:id?', auth, postController.updatePost);
-postRouter.post('/updateimage1', [auth, uploads.single('image')], postController.updatePostImage1);
-postRouter.post('/updateimage2', [auth, uploads.single('image')], postController.updatePostImage2);
+postRouter.patch('/update/:id?', auth, postController.updatePost);
+postRouter.patch('/updateimage1', [auth, uploads.single('image')], postController.updatePostImage1);
+postRouter.patch('/updateimage2', [auth, uploads.single('image')], postController.updatePostImage2);
 
 // mostrar imagenes del post
 postRouter.get('/showImage/:id?/:number?', postController.showImage);
@@ -50,6 +50,6 @@ postRouter.get('/find/:id?', auth, postController.findPostById);
 
 // eliminar post
 postRouter.post('/delete/:id?', auth, postController.deletePostById);
-postRouter.post('/changeStatus/:id?', auth, postController.changePostStatus);
+postRouter.patch('/changeStatus/:id?', auth, postController.changePostStatus);
 
 export default postRouter;
