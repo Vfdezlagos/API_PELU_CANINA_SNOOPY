@@ -1,6 +1,7 @@
 import jwt from 'jwt-simple';
 import moment from 'moment';
 import { secret } from '../helpers/jwt.js';
+import { desencriptar } from '../helpers/encripter.js';
 
 // crear middleware
 const authMailer = (req, res, next) => {
@@ -11,7 +12,9 @@ const authMailer = (req, res, next) => {
     });
 
     // Limpiar token
-    let token = req.params.token.replaceAll(/['"]+/g, '');
+    let encriptedtoken = req.params.token.replaceAll(/['"]+/g, '');
+
+    let token = desencriptar(encriptedtoken);
 
     try{
         // decodificar token

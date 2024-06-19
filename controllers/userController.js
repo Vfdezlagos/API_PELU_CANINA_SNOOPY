@@ -7,6 +7,7 @@ import validate from "../helpers/validate.js";
 import bcrypt from "bcrypt";
 import fs from "node:fs";
 import config from "../config.js";
+import * as encripter from '../helpers/encripter.js';
 
 const test = async (req, res) => {
     const response = await userHelper.getUserDogsImages('6668d57c69d90c75e1995339');
@@ -54,8 +55,11 @@ const register = (req, res) => {
             // crear token con los datos del body
             const token = jwt.createRegisterToken(createdUser);
 
+            // Encriptar token
+            const encriptedToken = encripter.encriptar(token);
+
             // const url objetivo
-            const url = `${config.FRONTEND_HOST}/completar_registro/${token}`
+            const url = `${config.FRONTEND_HOST}/completar_registro/${encriptedToken}`
 
             // preparar mail
             const html = `<div style="display: block; margin: 0 auto; width: 100%; min-height: 600px; background-color: white; color: black; background-image: url(cid:patron_patitas); background-repeat: repeat;">
@@ -203,6 +207,8 @@ const login = (req, res) => {
             // crear token con el usuario encontrado
             const token = jwt.createToken(identifiedUser);
 
+            const encriptedToken = encripter.encriptar(token);
+
             // eliminar la info que no queremos guardar en el token
             delete identifiedUser.password;
             delete identifiedUser.__v;
@@ -215,7 +221,7 @@ const login = (req, res) => {
                 status: 'Success',
                 message: 'Usuario identificado correctamente',
                 user: identifiedUser,
-                token
+                token: encriptedToken
             });
 
         })
@@ -546,6 +552,22 @@ const deleteUser = (req, res) => {
 }
 
 
+// Checkear si user role es admin
+const checkAdmin = (req, res) => {
+    const userRole = req.user.role;
+
+    if(userRole === 'role-admin') return res.status(200).send({
+        status: 'Success',
+        message: 'El usuario es administrador'
+    });
+
+    return res.status(401).send({
+        status: 'Error',
+        message: 'El usuario no es admin'
+    });
+}
+
+
 export {
     test,
     register,
@@ -556,5 +578,6 @@ export {
     list,
     findById,
     update,
-    deleteUser
+    deleteUser,
+    checkAdmin
 }
