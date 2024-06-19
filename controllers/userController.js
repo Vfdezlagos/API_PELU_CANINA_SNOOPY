@@ -255,8 +255,10 @@ const passwordChange = (req, res) => {
             // crear token de recuperación de contraseña
             const token = jwt.createMailerToken(user);
 
+            const encriptedToken = encripter.encriptar(token);
+
             // crear url destino
-            const url = `${config.FRONTEND_HOST}/password-change/${token}`  
+            const url = `${config.FRONTEND_HOST}/password-change/${encriptedToken}`  
 
             // configurar email
             const html = `<div style="display: block; margin: 0 auto; width: 100%; min-height: 600px; background-color: white; color: black; background-image: url(cid:patron_patitas); background-repeat: repeat;">
