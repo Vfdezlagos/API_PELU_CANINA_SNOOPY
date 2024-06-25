@@ -568,6 +568,88 @@ const updatePostImage2 = (req, res) => {
         });
 }
 
+
+// Seleccionar (quitar) como perro del mes
+const changeSelected = (req, res) => {
+    // Verificar que usuario identificado sea admin
+    const user = req.user;
+
+    // si no es admin devolver error
+    if(!validate.Admin(user)){
+        return res.status(400).send({
+            status: 'Error',
+            message: 'Debes ser administrador para acceder a esta acción'
+        });
+    }
+
+    // Obtener id del post por parametro de url
+
+    if(!req.params.id || req.params.id.length == 0) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe indicar el id del post como parametro en la url'
+    });
+
+    const postId = req.params.id;
+
+
+    // Actualizar post seleccionado a false
+    postModel.findOneAndUpdate({selected: true}, {selected: false}, {new: true}).exec()
+        .then(previousPost => {
+            postModel.findByIdAndUpdate(postId, {selected: true}, {new: true}).exec()
+                .then(selectedPost => {
+                    if(!selectedPost || selectedPost.length == 0) return res.status(404).send({
+                        status: 'Error',
+                        message: 'No se encontró el post a seleccionar'
+                    });
+
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Post seleccionado con exito',
+                        selectedPost,
+                        previousPost
+                    });
+                })
+                .catch(error => {
+                    return res.status(500).send({
+                        status: 'Error',
+                        message: 'Error a intentar buscar y actualizar el post'
+                    });
+                });
+
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar actualizar el post seleccionado anteriormente'
+            });
+        });
+}
+
+// Listar post seleccionado
+const findSelected = (req, res) => {
+    // hacer un findOne
+    postModel.findOne({selected: true}).exec()
+        .then(post => {
+            if(!post || post.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'no se encontró el post seleccionado'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Post seleccionado como perro del mes',
+                post
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buscar el post seleccionado en DB'
+            });
+        });
+}
+
+
 export {
     test,
     register,
@@ -581,4 +663,6 @@ export {
     updatePost,
     updatePostImage1,
     updatePostImage2,
+    changeSelected,
+    findSelected
 }

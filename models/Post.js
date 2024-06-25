@@ -25,6 +25,10 @@ const postSchema = Schema({
         type: Boolean,
         default: false
     },
+    selected: {
+        type: Boolean,
+        default: false
+    },
     created_at: {
         type: Date,
         default: Date.now

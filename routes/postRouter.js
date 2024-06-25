@@ -52,4 +52,10 @@ postRouter.get('/find/:id?', auth, postController.findPostById);
 postRouter.post('/delete/:id?', auth, postController.deletePostById);
 postRouter.post('/changeStatus/:id?', auth, postController.changePostStatus);
 
+// Seleccionar o quitar post del perro del mes
+postRouter.patch('/changeSelected/:id?', auth, postController.changeSelected);
+
+// Listar post Seleccionado
+postRouter.get('/findSelected', postController.findSelected);
+
 export default postRouter;
