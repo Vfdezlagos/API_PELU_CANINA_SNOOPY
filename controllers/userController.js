@@ -472,24 +472,39 @@ const update = (req, res) => {
     // obtener datos del body
     const bodyData = req.body;
 
-    // hacer un findByIdAndUpdate
-    userModel.findByIdAndUpdate(userId, bodyData, {new: true}).exec()
-        .then(updatedUser => {
-            if(!updatedUser || updatedUser.length == 0) return res.status(404).send({
+    // ver si el nombre de usuario y/o mail ya existen
+    userModel.find({$or: [{username: bodyData.username}, {email: bodyData.email}]}).exec()
+        .then(users => {
+            if(users.length > 0) return res.status(400).send({
                 status: 'Error',
-                message: 'No se encontró al usuario a actualizar'
+                message: 'El usuario con este nombre o email ya existe'
             });
 
-            return res.status(200).send({
-                status: 'Success',
-                message: 'Usuario actualizado con exito',
-                user: updatedUser
+            // hacer un findByIdAndUpdate
+            userModel.findByIdAndUpdate(userId, bodyData, {new: true}).exec()
+            .then(updatedUser => {
+                if(!updatedUser || updatedUser.length == 0) return res.status(404).send({
+                    status: 'Error',
+                    message: 'No se encontró al usuario a actualizar'
+                });
+
+                return res.status(200).send({
+                    status: 'Success',
+                    message: 'Usuario actualizado con exito',
+                    user: updatedUser
+                });
+            })
+            .catch(error => {
+                return res.status(500).send({
+                    status: 'Error',
+                    message: 'Error al intentar buscar al usuario en DB'
+                });
             });
         })
         .catch(error => {
             return res.status(500).send({
                 status: 'Error',
-                message: 'Error al intentar buscar al usuario en DB'
+                message: 'Error al intentar buscar si el usuario ya existe'
             });
         });
 }
