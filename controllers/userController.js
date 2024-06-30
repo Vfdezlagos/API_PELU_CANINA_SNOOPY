@@ -384,6 +384,54 @@ const passwordReset = async (req, res) => {
 
 
 // Listar usuarios (solo puede acceder el admin)
+const listPaginate = (req, res) => {
+    // obtener usuario identificado
+    const user = req.user;
+    const role = user.role;
+
+    // Obtener page por url
+    const page = req.params.page ? req.params.page : 1;
+
+    // configurar paginate
+    const custom_labels = {
+        docs: 'users',
+        totalDocs: 'totalUsers',
+    }
+
+    const options = {
+        sort: {created_at: -1},
+        page,
+        limit: 10,
+        customLabels: custom_labels
+    }
+
+    // verificar que sea admin
+    if(!role || role !== 'role-admin') return res.status(401).send({
+        status: 'Error',
+        message: 'Debe ser administrador para realizar esta acción'
+    });
+
+    userModel.paginate({}, options)
+        .then(data => {
+            if(!data || data.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'No se encontraron usuarios'
+            });
+
+            return res.status(200).send({
+                status: 'Success',
+                message: 'Lista de usuarios',
+                data
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al buscar usuarios en DB'
+            });
+        });
+}
+
 const list = (req, res) => {
     // obtener usuario identificado
     const user = req.user;
@@ -395,6 +443,7 @@ const list = (req, res) => {
         message: 'Debe ser administrador para realizar esta acción'
     });
 
+    // hacer un find
     userModel.find().exec()
         .then(users => {
             if(!users || users.length == 0) return res.status(404).send({
@@ -411,7 +460,7 @@ const list = (req, res) => {
         .catch(error => {
             return res.status(500).send({
                 status: 'Error',
-                message: 'Error al buscar usuarios en DB'
+                message: 'Error al intentar buscar a los usuarios en DB'
             });
         });
 }
@@ -475,36 +524,49 @@ const update = (req, res) => {
     // ver si el nombre de usuario y/o mail ya existen
     userModel.find({$or: [{username: bodyData.username}, {email: bodyData.email}]}).exec()
         .then(users => {
-            if(users.length > 0) return res.status(400).send({
+            let existe = false;
+            
+            // verificar que el usuario encontrado si se encontraron, no sea el mismo al que se esta actualizando
+            if(users){
+                users.forEach((user) => {
+                    if(user._id != userId) {
+                        existe = true;
+                    }
+                });
+            }
+
+            // si existe un usuario distinto con el mismo username o email, devolver el error
+            if(existe) return res.status(400).send({
                 status: 'Error',
                 message: 'El usuario con este nombre o email ya existe'
             });
 
-            // hacer un findByIdAndUpdate
+            // buscar al usuario por id y actualizarlo
             userModel.findByIdAndUpdate(userId, bodyData, {new: true}).exec()
-            .then(updatedUser => {
-                if(!updatedUser || updatedUser.length == 0) return res.status(404).send({
-                    status: 'Error',
-                    message: 'No se encontró al usuario a actualizar'
+                .then(updatedUser => {
+                    if(!updatedUser || updatedUser.length == 0) return res.status(404).send({
+                        status: 'Error',
+                        message: 'No se encontró el usuario a actualizar'
+                    });
+
+                    return res.status(200).send({
+                        status: 'Success',
+                        message: 'Usuario actualizado con exito',
+                        user: updatedUser
+                    });
+                })
+                .catch(error => {
+                    return res.status(500).send({
+                        status: 'Error',
+                        message: 'Error al intentar actualizar al usuario en DB'
+                    });
                 });
 
-                return res.status(200).send({
-                    status: 'Success',
-                    message: 'Usuario actualizado con exito',
-                    user: updatedUser
-                });
-            })
-            .catch(error => {
-                return res.status(500).send({
-                    status: 'Error',
-                    message: 'Error al intentar buscar al usuario en DB'
-                });
-            });
         })
         .catch(error => {
             return res.status(500).send({
                 status: 'Error',
-                message: 'Error al intentar buscar si el usuario ya existe'
+                message: 'Error al intentar buscar al usuario en DB'
             });
         });
 }
@@ -593,6 +655,7 @@ export {
     passwordChange,
     passwordReset,
     list,
+    listPaginate,
     findById,
     update,
     deleteUser,

@@ -17,6 +17,7 @@ userRouter.post('/passwordChange', userController.passwordChange);
 userRouter.post('/passwordReset/:token?', authMailer, userController.passwordReset);
 
 // Listar usuarios (solo puede acceder el admin)
+userRouter.get('/listUsers/:page?', auth, userController.listPaginate);
 userRouter.get('/list', auth, userController.list);
 userRouter.get('/findbyid/:id?', auth, userController.findById);
 
