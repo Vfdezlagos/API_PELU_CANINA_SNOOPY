@@ -23,6 +23,7 @@ userRouter.get('/findbyid/:id?', auth, userController.findById);
 
 // Actualizar usuario
 userRouter.patch('/update/:id?', userController.update);
+userRouter.patch('/changeRole/:id?', auth, userController.changeRole);
 
 // Eliminar usuario
 userRouter.post('/delete/:id?', userController.deleteUser);

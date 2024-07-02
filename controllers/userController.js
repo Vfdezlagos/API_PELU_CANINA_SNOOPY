@@ -521,6 +521,11 @@ const update = (req, res) => {
     // obtener datos del body
     const bodyData = req.body;
 
+    if(bodyData.role) return res.status(401).send({
+        status: 'Error',
+        message: 'Debe ser admin para realizar esta acción'
+    });
+
     // ver si el nombre de usuario y/o mail ya existen
     userModel.find({$or: [{username: bodyData.username}, {email: bodyData.email}]}).exec()
         .then(users => {
@@ -569,6 +574,64 @@ const update = (req, res) => {
                 message: 'Error al intentar buscar al usuario en DB'
             });
         });
+}
+
+const changeRole = (req, res) => {
+    // verificar que el usuario identificado sea admin
+    const identityUser = req.user;
+
+    if (!validate.Admin(identityUser)) return res.status(401).send({
+        status: 'Error',
+        message: 'Debe ser administrador para realizar esta acción'
+    });
+
+    // obtener user id como parametro
+    if(!req.params.id || req.params.id.length == 0) return res.status(400).send({
+        status: 'Error',
+        message: 'Debe indicar el id del usuario como parametro por la url'
+    });
+
+    const userId = req.params.id;
+
+    userModel.findById(userId).exec()
+        .then(user => {
+            if(!user || user.length == 0) return res.status(404).send({
+                status: 'Error',
+                message: 'Usuario no encontrado'
+            });
+
+            // crear la variable de cambio de role
+            const newRole = user.role == 'role-user' ? 'role-admin' : 'role-user';
+
+            // hacer un findByIdAndAupdate
+            userModel.findByIdAndUpdate(userId, {role: newRole}, {new: true}).exec()
+            .then(updatedUser => {
+                if(!updatedUser || updatedUser.length == 0) return res.status(404).send({
+                    status: 'Error',
+                    message: 'Usuario no encontrado'
+                });
+
+                return res.status(200).send({
+                    status: 'Success',
+                    message: 'Rol cambiado con exito',
+                    user: updatedUser
+                });
+            })
+            .catch(error => {
+                return res.status(500).send({
+                    status: 'Error',
+                    message: 'Error al intentar actualizar al usuario en DB'
+                });
+            });
+        })
+        .catch(error => {
+            return res.status(500).send({
+                status: 'Error',
+                message: 'Error al intentar buscar al usuario en DB'
+            });
+        });
+
+    
 }
 
 
@@ -658,6 +721,7 @@ export {
     listPaginate,
     findById,
     update,
+    changeRole,
     deleteUser,
     checkAdmin
 }
