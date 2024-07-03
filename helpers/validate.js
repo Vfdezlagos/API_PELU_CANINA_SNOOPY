@@ -120,9 +120,9 @@ const validate = {
     },
 
     imageExtension: (extension) => {
-        if(extension !== 'png' && extension !== 'jpg' && extension !== 'jpeg' && extension !== 'gif') {
+        if(extension !== 'png' && extension !== 'jpg' && extension !== 'jpeg' && extension !== 'gif' && extension !== 'webp') {
             console.error('la extension del archivo no es valida');
-            console.error('Debe ser: png, jpg, jpeg o gif');
+            console.error('Debe ser: png, jpg, jpeg, webp o gif');
             return false;
         };
 
