@@ -325,10 +325,13 @@ const listDisabled = (req, res) => {
 
 const showImage = (req, res) => {
 
-    if(!req.params.id) return res.status(400).send({
-        status: 'Error',
-        message: 'Debe enviar el id del banner como parametro por la url'
-    });
+    if(!req.params.id){
+        //mostrar imagen default si no llega id
+
+        const filePath = "public/images/uploads/banners/default_image.png";
+        return res.sendFile(path.resolve(filePath));
+    }
+
 
     // obtener id del perro por parametro
     const bannerId = req.params.id;
