@@ -247,7 +247,7 @@ const listBanners = (req, res) => {
         select: '-__v -active',
         sort: {created_at: -1},
         page,
-        limit: 10,
+        limit: 5,
         customLabels: custom_labels
     }
 
