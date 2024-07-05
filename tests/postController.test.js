@@ -3,7 +3,7 @@ import postModel from './path/to/your/models/Post';
 import validate from './path/to/your/helpers/validate';
 
 // Mock the dependencies
-jest.mock('./path/to/your/models/Post');
+jest.mock('./path/to/your/models/Post');//agregar path
 jest.mock('./path/to/your/helpers/validate');
 
 describe('Post Controller', () => {
