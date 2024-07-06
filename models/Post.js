@@ -11,7 +11,8 @@ const postSchema = Schema({
         required: true
     },
     owner: {
-        type: String
+        type: String,
+        default: 'None'
     },
     image1: {
         type: String,
