@@ -10,12 +10,22 @@ jest.mock('multer');
 jest.mock('../controllers/dogController');
 jest.mock('../middlewares/auth');
 
+jest.mock('multer', () => {
+  const multer = jest.fn(() => ({
+    single: jest.fn()
+  }));
+
+  multer.diskStorage = jest.fn((config) => config);
+
+  return multer;
+});
+
 describe('Dog Router Configuration', () => {
   beforeAll(() => {
     fs.existsSync.mockImplementation((path) => {
       return path === 'public/images/uploads/' || path === 'public/images/uploads/dogs';
     });
-    fs.mkdirSync.mockImplementation(() => {});
+    fs.mkdirSync.mockImplementation(() => { });
   });
 
   afterAll(() => {
@@ -23,15 +33,15 @@ describe('Dog Router Configuration', () => {
   });
 
   it('should create necessary directories if they do not exist', () => {
-    // Se requiere el archivo para ejecutar la lógica de creación de directorios
     require('../routes/dogRouter');
 
-    // Verifica que se llamó a fs.mkdirSync con las rutas correctas
     expect(fs.mkdirSync).toHaveBeenCalledWith('public/images/uploads/');
     expect(fs.mkdirSync).toHaveBeenCalledWith('public/images/uploads/dogs/');
   });
 
   it('should configure multer storage correctly', () => {
+    require('../routes/dogRouter'); // Asegúrate de requerir el archivo para configurar multer
+
     const storageConfig = multer.diskStorage.mock.calls[0][0];
 
     expect(storageConfig).toHaveProperty('destination');
@@ -46,10 +56,12 @@ describe('Dog Router Configuration', () => {
   });
 
   it('should define routes correctly', () => {
+    require('../routes/dogRouter'); // Asegúrate de requerir el archivo para configurar las rutas
+
     const routes = [
       { method: 'get', path: '/test', middlewares: [dogController.test] },
       { method: 'post', path: '/register', middlewares: [auth, dogController.register] },
-      { method: 'post', path: '/upload', middlewares: [auth, uploads.single('file0'), dogController.uploadDogImage] },
+      { method: 'post', path: '/upload', middlewares: [auth, multer().single('file0'), dogController.uploadDogImage] },
       { method: 'get', path: '/list', middlewares: [auth, dogController.dogList] },
       { method: 'get', path: '/showimage/:id?', middlewares: [dogController.showImage] },
     ];
