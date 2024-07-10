@@ -328,7 +328,7 @@ const showImage = (req, res) => {
     if(!req.params.id){
         //mostrar imagen default si no llega id
 
-        const filePath = "public/images/uploads/banners/default_image.png";
+        const filePath = "public/images/uploads/banners/default_image.webp";
         return res.sendFile(path.resolve(filePath));
     }
 

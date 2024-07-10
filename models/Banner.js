@@ -12,7 +12,7 @@ const bannerSchema = Schema({
     },
     image: {
         type: String,
-        default: 'default_image.png'
+        default: 'default_image.webp'
     },
     active: {
         type: Boolean,

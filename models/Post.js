@@ -16,11 +16,11 @@ const postSchema = Schema({
     },
     image1: {
         type: String,
-        default: 'default_image.png'
+        default: 'default_image.webp'
     },
     image2: {
         type: String,
-        default: 'default_image.png'
+        default: 'default_image.webp'
     },
     active: {
         type: Boolean,
