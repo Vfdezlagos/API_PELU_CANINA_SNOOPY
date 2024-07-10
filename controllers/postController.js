@@ -224,10 +224,11 @@ const findPostById = (req, res) => {
 
 const showImage = (req, res) => {
 
-    if(!req.params.id) return res.status(400).send({
-        status: 'Error',
-        message: 'Debe enviar el id del post como parametro por la url'
-    });
+    if(!req.params.id) {
+        // si no llega id por parametro mostrar imagen default
+        const filePath = "public/images/uploads/posts/default_image.png";
+        return res.sendFile(path.resolve(filePath));
+    }
 
     // obtener id del post por parametro
     const postId = req.params.id;
