@@ -468,7 +468,7 @@ const updatePostImage1 = (req, res) => {
                         });
                     }
                     // si se pudo actualizar, borrar image1
-                    if(oldImage1 !== 'default_image.png'){
+                    if(oldImage1 !== 'default_image.webp'){
                         const oldImage1Path = "public/images/uploads/posts/" + oldImage1;
                         fs.unlinkSync(oldImage1Path);
                     }
@@ -543,7 +543,7 @@ const updatePostImage2 = (req, res) => {
                         });
                     }
                     // si se pudo actualizar, borrar image1
-                    if(oldImage2 !== 'default_image.png'){
+                    if(oldImage2 !== 'default_image.webp'){
                         const oldImage2Path = "public/images/uploads/posts/" + oldImage2;
                         fs.unlinkSync(oldImage2Path);
                     }

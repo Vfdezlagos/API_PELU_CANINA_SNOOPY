@@ -154,7 +154,7 @@ const updateImage = (req, res) => {
                         });
                     }
                     // si se pudo actualizar, borrar image
-                    if(oldImage !== 'default_image.png'){
+                    if(oldImage !== 'default_image.webp'){
                         const oldImagePath = "public/images/uploads/banners/" + oldImage;
                         fs.unlinkSync(oldImagePath);
                     }
