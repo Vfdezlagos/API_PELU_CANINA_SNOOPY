@@ -459,7 +459,7 @@ const deleteBanner = (req, res) => {
             });
 
             // Si se logra eliminar, borrar la imagen asociada (si no es default)
-            if(deletedBanner.image !== 'default_image.png'){
+            if(deletedBanner.image !== 'default_image.webp'){
                 const filename = deletedBanner.image;
                 const imagePath = `public/images/uploads/banners/${filename}`
 

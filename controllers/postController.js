@@ -296,12 +296,12 @@ const deletePostById = (req, res) => {
             });
 
             // Eliminar imágenes relacionadas al post
-            if(deletedPost.image1 !== 'default_image.png'){
+            if(deletedPost.image1 !== 'default_image.webp'){
                 const image1Path = "public/images/uploads/posts/" + deletedPost.image1;
                 fs.unlinkSync(image1Path);
             }
 
-            if(deletedPost.image2 !== 'default_image.png'){
+            if(deletedPost.image2 !== 'default_image.webp'){
                 const image2Path = "public/images/uploads/posts/" + deletedPost.image2;
                 fs.unlinkSync(image2Path);
             }
