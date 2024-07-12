@@ -47,6 +47,6 @@ bannerRouter.get('/showimage/:id?', bannerController.showImage);
 
 // eliminar
 bannerRouter.patch('/changeStatus/:id?', auth, bannerController.changeStatus);
-bannerRouter.post('/delete/:id?', auth, bannerController.deleteBanner);
+bannerRouter.delete('/delete/:id?', auth, bannerController.deleteBanner);
 
 export default bannerRouter;

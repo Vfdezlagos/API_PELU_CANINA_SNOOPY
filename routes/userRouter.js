@@ -26,7 +26,7 @@ userRouter.patch('/update/:id?', userController.update);
 userRouter.patch('/changeRole/:id?', auth, userController.changeRole);
 
 // Eliminar usuario
-userRouter.post('/delete/:id?', userController.deleteUser);
+userRouter.delete('/delete/:id?', userController.deleteUser);
 
 // Cheacker que el usuario identificado sea admin
 userRouter.get('/isAdmin', auth, userController.checkAdmin);
