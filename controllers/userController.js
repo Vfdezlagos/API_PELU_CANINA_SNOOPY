@@ -68,7 +68,7 @@ const register = (req, res) => {
                                 <h1 style="text-align: center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 2em; color: black;">Validación de registro de usuario</h1>
                                 <br />
                                 <br />
-                                <h2 style="text-align: center; padding-left: 20px; padding-right: 20px; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.3em; color: black;">Presiona sobre el botón "Completar mi registro" para validar tu cuenta de usuario en Peluqueria canina Snoopy!</h2>
+                                <h2 style="text-align: center; padding-left: 20px; padding-right: 20px; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.3em; color: black;">Presiona sobre el botón "Completar mi registro" para validar tu cuenta de usuario en Peluqueria canina Ángeles peluditos!</h2>
                                 <br />
                                 <div style="text-align: center;">
                                     <a href="${url}"><button style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: 1.2em; background-color: rgb(0, 183, 255); width: fit-content; height: 50px; line-height: 40px; border: 2px solid rgb(0, 183, 255); border-radius: 40px; color: white; margin-bottom: 1.5em;">Completar mi registro</button></a>
@@ -267,7 +267,7 @@ const passwordChange = (req, res) => {
                                 <h1 style="text-align: center; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 2em; color: black;">Solicitud de cambio de contraseña</h1>
                                 <br />
                                 <br />
-                                <h2 style="text-align: center; padding-left: 20px; padding-right: 20px; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.3em; color: black;">Presiona sobre el botón "Cambiar contraseña" para dirigirte al formulario de cambio de contraseña en Peluqueria canina Snoopy!</h2>
+                                <h2 style="text-align: center; padding-left: 20px; padding-right: 20px; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.3em; color: black;">Presiona sobre el botón "Cambiar contraseña" para dirigirte al formulario de cambio de contraseña en Peluqueria canina Ángeles peluditos!</h2>
                                 <br />
                                 <div style="text-align: center;">
                                     <a href="${url}"><button style="font-family:Verdana, Geneva, Tahoma, sans-serif; font-size: 1.2em; background-color: #059669; width: fit-content; height: 50px; line-height: 40px; border: 2px solid #007A54; border-radius: 40px; color: white; margin-bottom: 1.5em;">Cambiar contraseña</button></a>
